@@ -2,10 +2,10 @@
 
 ## Problem Details
 
-Problem name: ssss+
-Problem author: wwm
-Category: crypto
-Description: can you do it again, but with hidden?
+Problem name: ssss+  
+Problem author: wwm  
+Category: crypto  
+Description: can you do it again, but with hidden?  
 Attachments: server.py
 
 ```
