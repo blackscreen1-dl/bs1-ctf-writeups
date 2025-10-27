@@ -1,12 +1,12 @@
 # ssss+
 
-## Problem Details
+## problem details
 
-Problem name: ssss+  
-Problem author: wwm  
-Category: crypto  
-Description: can you do it again, but with hidden?  
-Attachments: server.py
+problem name: ssss+  
+problem author: wwm  
+category: crypto  
+description: can you do it again, but with hidden?  
+attachments: server.py
 
 ```
 #!/usr/local/bin/python3
@@ -40,7 +40,8 @@ if int(input("secret? ")) == SECRET:
     print(FLAG, flush=True)
 ```
 
-## Interesting Things
+## funny stuff
 
-
+so i tried ssss first (ofc), and i managed to solve it - only to realise that my teammate solved it 1 hour earlier (whoops). 
+turns out i overcomplicated ssss. but at least that solution was useful for ssss+~
 
