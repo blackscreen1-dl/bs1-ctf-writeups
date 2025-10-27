@@ -69,20 +69,20 @@ the value of $SECRET$ anyways.
 
 let $$P(x) = a_0 + a_1 x + a_2 x^2 + \ldots + a_{14} x^{14}$$. the key to note here is that $P(x)$ and $P(-x)$ have similar terms.
 
-if we try summing the 2, we get a new polynomial $$Q(x) = P(x) + P(-x) = $(a_0 + a_0) + (a_1 x - a_1 x) + (a_2 x^2 + a_2 x^2) + \ldots)$$.
+if we try summing the 2, we get a new polynomial $Q(x) = P(x) + P(-x) = $(a_0 + a_0) + (a_1 x - a_1 x) + (a_2 x^2 + a_2 x^2) + \ldots)$.
 
-Then $$Q(x) = 2(a_0 + a_2 x^2 + a_4 x^4 + \ldots + a_{14} x^{14})$$. Notice that $Q(\sqrt{x})$ is a polynomial of degree 7!
+Then $Q(x) = 2(a_0 + a_2 x^2 + a_4 x^4 + \ldots + a_{14} x^{14})$. Notice that $Q(\sqrt{x})$ is a polynomial of degree 7!
 
 Very sadly, Finding one value of $Q(x)$ requires 2 queries of $P$ of $x$ and $-x$. Thus we have $14/2 = 7$ queries to determine a polynomial 
 of degree $7$, which is not possible.
 
 What about taking the different of the 2?
 
-We get $$Q(x) = P(x) - P(-x) = $(a_0 - a_0) + (a_1 x + a_1 x) + (a_2 x^2 - a_2 x^2) + \ldots)$$.
+We get $Q(x) = P(x) - P(-x) = $(a_0 - a_0) + (a_1 x + a_1 x) + (a_2 x^2 - a_2 x^2) + \ldots)$.
 
-Then $$Q(x) = 2(a_1 x + a_3 x^3 + \ldots + a_{13} x^{13})$$. Now let $R(x) = \frac{Q(\sqrt{x})}{\sqrt{x}}$.
+Then $Q(x) = 2(a_1 x + a_3 x^3 + \ldots + a_{13} x^{13})$$. Now let $R(x) = \frac{Q(\sqrt{x})}{\sqrt{x}}$.
 
-Now $$R(x) = 2(a_1 + a_3 x + \ldots + a_13 x^6)$$. We have $7$ queries to determine a polynomial of degree $6$!
+Now $R(x) = 2(a_1 + a_3 x + \ldots + a_13 x^6)$. We have $7$ queries to determine a polynomial of degree $6$!
 
 In the oracle, start by querying all integers from $1$ to $7$, then query all integers from $p-7$ to $p-1$.
 
