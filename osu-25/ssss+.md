@@ -43,5 +43,26 @@ if int(input("secret? ")) == SECRET:
 ## funny stuff
 
 so i tried ssss first (ofc), and i managed to solve it - only to realise that my teammate solved it 1 hour earlier (whoops). 
-turns out i overcomplicated ssss. but at least that solution was useful for ssss+~
+turns out i overcomplicated ssss. but at least that solution was useful for ssss+!  
+i have no idea how intended this solution is, since i approach crypto from a pure math, 0 background crypto knowledge standpoint, 
+so my solution could be a bit scuffed. this is also why i got stuck on ssss for so long, because i didn't know how overpowered 
+sage was. guess i need to get better at crypto.
+
+## problem analysis
+
+looking at the code, the program will first generate the first $k = 15$ terms of an lfsr (linear-feedback shift register, don't worry i also 
+didn't know about this before this contest) with randomly generated $a$, $b$, prime modulo $pp$ and starting value $SECRET$, which we need to find.  
+the second part of the program takes in $k - 1 = 14$ queries of $x$, and responds with the polynomial of degree 14 with coefficients of the lfsr sequence. 
+interestingly, the program returns the answers modulo $p = 2^255 - 19$, which is different from the prime $pp$ used in the lfsr. after that, we need to 
+determine the value of $SECRET$.  
+since literally everything from the first part is unknown, i decided to start by finding stuff about the polynomial directly, ignoring the lfsr sequence.
+
+## getting enough of the polynomial
+
+we have $14$ queries to find a degree $14$ polynomial. with gaussian elimination, we can find a degree $m$ polynomial with $m+1$ values. so we are one value short.  
+the thing to note here is that we don't need to get the entire polynomial. since the coefficients follow some pattern, we will eventually be able to find 
+the value of $SECRET$ 
+
+
+
 
