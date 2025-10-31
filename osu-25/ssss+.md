@@ -139,7 +139,7 @@ $c_{n+2} - c{n+1} = a^2(c_{n+1} - c_n)$
 
 now only a is left... can we cancel it out again? use the next term:
 
-$a^2(c_{n+2} - c_{n+1) = c_{n+3} - c{n+2}$
+$a^2(c_{n+2} - c_{n+1} = c_{n+3} - c{n+2}$
 
 here, we intentionally flip the sides so that we can multiply the 2 equations together. since a cannot be divisible by $pp$,
 
@@ -164,7 +164,7 @@ ok, so now we have pp, how do we get $a$, $b$ and finally $SECRET$?
 
 well, we can start with finding $a$, since we already have from earlier:
 
-$a^2(c_{n+2} - c_{n+1) = c_{n+3} - c{n+2}$
+$a^2(c_{n+2} - c_{n+1} = c_{n+3} - c{n+2}$
 
 we can find the value of $a^2$ modulo $pp$. so we need to find the square root of $a^2$ modulo $pp$!
 
