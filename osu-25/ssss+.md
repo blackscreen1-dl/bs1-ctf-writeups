@@ -88,6 +88,112 @@ in the oracle, start by querying all integers from $1$ to $7$, then query all in
 
 set $c_i = \frac{P(i) + P(-i)}{2i} (mod p)$. Then $R(i^2) = c_i$.
 
+i did this in sage by generating the list of numbers i would throw in:
 
+```
+p = 2**255 - 19
+k = 15
+tos = []
+for i in range(7):
+    tos.append(i+1)
+for i in range(7):
+    tos.append(p-i-1)
+print("\n".join([str(_) for _ in tos]))
+```
 
+then throwing the result into a variable called `res`:
 
+```
+pts = []
+for i in range(7):
+    pts.append([(i+1)^2, ((res[i]-res[i+7])*pow(2*(i+1), -1, p))%p])
+```
+
+now, we need to fit the polynomial R. we do this using lagrange interpolation, which is available on sage.
+
+```
+F = GF(p)
+R = F['x']
+P = R.lagrange_polynomial(pts)
+c = P.coefficients(sparse=False)
+
+# all the coefficients of P are still mod p, so we convert them to normal integers
+for i in range(len(c)): c[i] = int(c[i])
+```
+
+now, we have all the odd-indexed values of the original polynomial in c! note that we are now out of the world of p, so all future things will be in terms of pp.
+
+but we still need to figure out what pp is to make the modulo any useful.
+
+we can probably try using some facts about the lfsr function. note that one element of c is used to generate the next element. it follows the following relation:
+
+$c_{n+1} = a^2c_n + m$, where $m = ab + b$
+
+hmm, we need a way to figure out what the modulo is, which would be easy if we knew both sides of the euqation. what happens if we consider the next term as well?
+
+$c_{n+2} = a^2c_{n+1} + m$
+
+seems like we can cancel out the $m$ here, if we subtract the 2 equations.
+
+$c_{n+2} - c{n+1} = a^2(c_{n+1} - c_n)$
+
+now only a is left... can we cancel it out again? use the next term:
+
+$a^2(c_{n+2} - c_{n+1) = c_{n+3} - c{n+2}$
+
+here, we intentionally flip the sides so that we can multiply the 2 equations together. since a cannot be divisible by $pp$,
+
+$(c_{n+2} - c{n+1})^2 = (c_{n+1} - c_n)(c_{n+3} - c{n+2})$
+
+now we know both sides of the equation, so we get $pp$ divides the difference of the equation!
+
+$pp | (c_{n+2} - c{n+1})^2 - (c_{n+1} - c_n)(c_{n+3} - c{n+2})$
+
+note that we have 6 values of c, so we can recover 4 numbers that $pp$ can divide. if we take the gcd, we are quite likely to end up with $pp$!
+
+```
+for i in range(1, len(c)): adj.append(int(c[i]) - int(c[i-1]))
+divs = []
+for i in range(1, len(adj)-1): divs.append(adj[i]^2 - adj[i-1]*adj[i+1])
+print(divs)
+pp = divs[0]
+for i in range(1, len(divs)): pp = gcd(pp, divs[i])
+```
+
+ok, so now we have pp, how do we get $a$, $b$ and finally $SECRET$?
+
+well, we can start with finding $a$, since we already have from earlier:
+
+$a^2(c_{n+2} - c_{n+1) = c_{n+3} - c{n+2}$
+
+we can find the value of $a^2$ modulo $pp$. so we need to find the square root of $a^2$ modulo $pp$!
+
+i don't know any systematic way to do this, but for certain types of $pp$, there are quite fast solutions. i just happened to face a case where $pp$ was $3$ mod $4$, which is an easy case. i may have rerolled for another $pp$ if i didn't get this.
+
+let $p = 4n + 3$.
+
+$r^2 = a \implies a^{2n+1} = r^{2(2n+1)} = 1$ all modulo $pp$, which is a famous result.
+
+since $a^{2n+1} = 1$, then $a^{2n+2} = a$ and thus $a^{n+1} = r$, all modulo $pp$.
+
+note that to divide by $k$, we need to use `pow(k, -1, pp)` for the mod inverse.
+
+```
+k = (pp-1)//2
+tafa2 = ((c[2]-c[1])*pow(c[1]-c[0], -1, pp))%pp
+a = pow(tafa2, (k+1)//2, pp)
+```
+
+now we can get $b$:
+
+$c_{n+1} = a^2c_n + ab + b \implies b = \frac{c_{n+1} - a^2c_n}{a+1}$.
+
+finally, $au + b = c_0 \implies u = \frac{c_0 - b}{a}$.
+
+```
+b = ((a*a*c[0] - c[1])*pow(-a-1, -1, pp))%pp
+u = ((c[0]-b)*pow(a, -1, pp))%pp
+print(a, b, u)
+```
+
+testing locally one more time using the values of $a$, $b$ and $u$ (since technically $-a$ is still a possible solution$, we verify that the numbers we get are correct. by throwing $u$ at the oracle, we get the flag. yay!
