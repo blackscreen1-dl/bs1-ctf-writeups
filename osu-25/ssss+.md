@@ -109,7 +109,7 @@ for i in range(7):
     pts.append([(i+1)^2, ((res[i]-res[i+7])*pow(2*(i+1), -1, p))%p])
 ```
 
-now, we need to fit the polynomial R. we do this using lagrange interpolation, which is available on sage.
+now, we need to fit the polynomial $R$. we do this using lagrange interpolation, which is available on sage.
 
 ```
 F = GF(p)
@@ -160,7 +160,7 @@ pp = divs[0]
 for i in range(1, len(divs)): pp = gcd(pp, divs[i])
 ```
 
-ok, so now we have pp, how do we get $a$, $b$ and finally $SECRET$?
+ok, so now we have $pp$, how do we get $a$, $b$ and finally $SECRET$?
 
 well, we can start with finding $a$, since we already have from earlier:
 
