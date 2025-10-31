@@ -62,7 +62,7 @@ since literally everything from the first part is unknown, i decided to start by
 
 ## getting enough of the polynomial
 
-we have $14$ queries to find a degree $14$ polynomial. with gaussian elimination, we can find a degree $m$ polynomial with $m+1$ values. so we are one value short.  
+we have $14$ queries to find a degree $14$ polynomial. with either lagrange interpolation or gaussian elimination, we can find a degree $m$ polynomial with $m+1$ values. so we are one value short.  
 
 the thing to note here is that we don't need to get the entire polynomial. since the coefficients follow some pattern, we will eventually be able to find 
 the value of $SECRET$ anyways.
@@ -121,15 +121,15 @@ c = P.coefficients(sparse=False)
 for i in range(len(c)): c[i] = int(c[i])
 ```
 
-now, we have all the odd-indexed values of the original polynomial in c! note that we are now out of the world of p, so all future things will be in terms of pp.
+now, we have all the odd-indexed values of the original polynomial in $c$! note that we are now out of the world of $p$, so all future things will be in terms of $pp$.
 
-but we still need to figure out what pp is to make the modulo any useful.
+but we still need to figure out what $pp$ is to make the modulo any useful.
 
-we can probably try using some facts about the lfsr function. note that one element of c is used to generate the next element. it follows the following relation:
+we can probably try using some facts about the lfsr function. note that one element of $c$ is used to generate the next element. it follows the following relation:
 
 $c_{n+1} = a^2c_n + m$, where $m = ab + b$
 
-hmm, we need a way to figure out what the modulo is, which would be easy if we knew both sides of the euqation. what happens if we consider the next term as well?
+hmm, we need a way to figure out what the modulo is, which would be easy if we knew both sides of the equation. what happens if we consider the next term as well?
 
 $c_{n+2} = a^2c_{n+1} + m$
 
@@ -137,11 +137,11 @@ seems like we can cancel out the $m$ here, if we subtract the 2 equations.
 
 $c_{n+2} - c{n+1} = a^2(c_{n+1} - c_n)$
 
-now only a is left... can we cancel it out again? use the next term:
+now only $a$ is left... can we cancel it out again? use the next term:
 
 $a^2(c_{n+2} - c_{n+1} = c_{n+3} - c{n+2}$
 
-here, we intentionally flip the sides so that we can multiply the 2 equations together. since a cannot be divisible by $pp$,
+here, we intentionally flip the sides so that we can multiply the 2 equations together. since $a$ cannot be divisible by $pp$,
 
 $(c_{n+2} - c{n+1})^2 = (c_{n+1} - c_n)(c_{n+3} - c{n+2})$
 
@@ -149,7 +149,7 @@ now we know both sides of the equation, so we get $pp$ divides the difference of
 
 $pp | (c_{n+2} - c{n+1})^2 - (c_{n+1} - c_n)(c_{n+3} - c{n+2})$
 
-note that we have 6 values of c, so we can recover 4 numbers that $pp$ can divide. if we take the gcd, we are quite likely to end up with $pp$!
+note that we have 6 values of $c$, so we can recover 4 numbers that $pp$ can divide. if we take the gcd, we are quite likely to end up with $pp$!
 
 ```
 for i in range(1, len(c)): adj.append(int(c[i]) - int(c[i-1]))
