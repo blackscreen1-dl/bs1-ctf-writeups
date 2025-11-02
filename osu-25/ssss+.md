@@ -55,7 +55,7 @@ looking at the code, the program will first generate the first $k = 15$ terms of
 didn't know about this before this contest) with randomly generated $a$, $b$, prime modulo $pp$ and starting value $SECRET$, which we need to find.  
 
 the second part of the program takes in $k - 1 = 14$ queries of $x$, and responds with the polynomial of degree 14 with coefficients of the lfsr sequence. 
-interestingly, the program returns the answers modulo $p = 2^255 - 19$, which is different from the prime $pp$ used in the lfsr. after that, we need to 
+interestingly, the program returns the answers modulo $p = 2^{255} - 19$, which is different from the prime $pp$ used in the lfsr. after that, we need to 
 determine the value of $SECRET$.  
 
 since literally everything from the first part is unknown, i decided to start by finding stuff about the polynomial directly, ignoring the lfsr sequence.
@@ -71,7 +71,7 @@ let $P(x) = a_0 + a_1 x + a_2 x^2 + \ldots + a_{14} x^{14}$. the key to note her
 
 if we try summing the 2, we get a new polynomial $Q(x) = P(x) + P(-x) = $(a_0 + a_0) + (a_1 x - a_1 x) + (a_2 x^2 + a_2 x^2) + \ldots)$.
 
-then $Q(x) = 2(a_0 + a_2 x^2 + a_4 x^4 + \ldots + a_{14} x^{14})$. Notice that $Q(\sqrt{x})$ is a polynomial of degree 7!
+then $Q(x) = 2(a_0 + a_2 x^2 + a_4 x^4 + \ldots + a_{14} x^{14})$. Notice that $Q(\sqrt{x})$ is a polynomial of degree 7! (without the factorial ofc)
 
 very sadly, Finding one value of $Q(x)$ requires 2 queries of $P$ of $x$ and $-x$. thus we have $14/2 = 7$ queries to determine a polynomial 
 of degree $7$, which is not possible.
@@ -82,11 +82,11 @@ we get $Q(x) = P(x) - P(-x) = $(a_0 - a_0) + (a_1 x + a_1 x) + (a_2 x^2 - a_2 x^
 
 then $Q(x) = 2(a_1 x + a_3 x^3 + \ldots + a_{13} x^{13})$$. Now let $R(x) = \frac{Q(\sqrt{x})}{\sqrt{x}}$.
 
-now $R(x) = 2(a_1 + a_3 x + \ldots + a_13 x^6)$. We have $7$ queries to determine a polynomial of degree $6$!
+now $R(x) = 2(a_1 + a_3 x + \ldots + a_{13} x^6)$. We have $7$ queries to determine a polynomial of degree $6$!
 
 in the oracle, start by querying all integers from $1$ to $7$, then query all integers from $p-7$ to $p-1$.
 
-set $c_i = \frac{P(i) + P(-i)}{2i} (mod p)$. Then $R(i^2) = c_i$.
+set $c_i = \frac{P(i) + P(-i)}{2i}$ modulo $p$. Then $R(i^2) = c_i$.
 
 i did this in sage by generating the list of numbers i would throw in:
 
@@ -135,15 +135,15 @@ $c_{n+2} = a^2c_{n+1} + m$
 
 seems like we can cancel out the $m$ here, if we subtract the 2 equations.
 
-$c_{n+2} - c{n+1} = a^2(c_{n+1} - c_n)$
+$c_{n+2} - c_{n+1} = a^2(c_{n+1} - c_n)$
 
 now only $a$ is left... can we cancel it out again? use the next term:
 
-$a^2(c_{n+2} - c_{n+1} = c_{n+3} - c{n+2}$
+$a^2(c_{n+2} - c_{n+1}) = c_{n+3} - c_{n+2}$
 
 here, we intentionally flip the sides so that we can multiply the 2 equations together. since $a$ cannot be divisible by $pp$,
 
-$(c_{n+2} - c{n+1})^2 = (c_{n+1} - c_n)(c_{n+3} - c{n+2})$
+$(c_{n+2} - c_{n+1})^2 = (c_{n+1} - c_n)(c_{n+3} - c_{n+2})$
 
 now we know both sides of the equation, so we get $pp$ divides the difference of the equation!
 
@@ -164,7 +164,7 @@ ok, so now we have $pp$, how do we get $a$, $b$ and finally $SECRET$?
 
 well, we can start with finding $a$, since we already have from earlier:
 
-$a^2(c_{n+2} - c_{n+1} = c_{n+3} - c{n+2}$
+$a^2(c_{n+2} - c_{n+1}) = c_{n+3} - c_{n+2}$
 
 we can find the value of $a^2$ modulo $pp$. so we need to find the square root of $a^2$ modulo $pp$!
 
@@ -196,4 +196,4 @@ u = ((c[0]-b)*pow(a, -1, pp))%pp
 print(a, b, u)
 ```
 
-testing locally one more time using the values of $a$, $b$ and $u$ (since technically $-a$ is still a possible solution$, we verify that the numbers we get are correct. by throwing $u$ at the oracle, we get the flag. yay!
+testing locally one more time using the values of $a$, $b$ and $u$ (since technically $-a$ is still a possible solution, we verify that the numbers we get are correct. by throwing $u$ at the oracle, we get the flag. yay!
